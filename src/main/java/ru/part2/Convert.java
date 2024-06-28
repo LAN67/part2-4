@@ -19,24 +19,29 @@ public class Convert implements Function<Model<OneIn>, Model<OneOut>> {
         for (OneIn oneIn : model.data) {
             oneOut = new OneOut();
             oneOut.login = oneIn.login;
-            oneOut.fio = normalFIO(oneIn.f) + " " + normalFIO(oneIn.i) + " " + normalFIO(oneIn.o);
-            try {
-                oneOut.date = df.parse(oneIn.date);
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-            if(oneIn.prog.equals("web") || oneIn.prog.equals("mobile")) {
-                oneOut.prog = oneIn.prog;
+            oneOut.fio = normalName(oneIn.f) + " " + normalName(oneIn.i) + " " + normalName(oneIn.o);
+            if (!oneIn.date.isEmpty()) {
+                try {
+                    oneOut.date = df.parse(oneIn.date);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
             }else{
+                oneOut.date = null;
+            }
+            if (oneIn.prog.equals("web") || oneIn.prog.equals("mobile")) {
+                oneOut.prog = oneIn.prog;
+            } else {
                 oneOut.prog = "other:" + oneIn.prog;
             }
+            oneOut.fileName = oneIn.fileName;
             modelOut.data.add(oneOut);
         }
         return modelOut;
     }
 
-    private String normalFIO(String name){
+    private String normalName(String name) {
 
-        return name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase();
+        return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
     }
 }

@@ -7,10 +7,10 @@ class Model<T> {
 }
 
 class OneIn {
-    String login, f, i, o, date, prog;
+    String login, f, i, o, date, prog, fileName;
 }
 
 class OneOut {
-    String login, fio, prog;
+    String login, fio, prog, fileName;
     Date date;
 }

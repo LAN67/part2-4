@@ -44,6 +44,7 @@ public class ReadFiles implements Supplier<Model> {
                 one.o = array[3];
                 one.date = array[4];
                 one.prog = array[5];
+                one.fileName = file.getCanonicalPath();
                 model.data.add(one);
             }
         } catch (IOException ex) {

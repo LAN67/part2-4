@@ -15,9 +15,15 @@ public class SaveData implements Consumer<Model<OneOut>> {
     public void accept(Model<OneOut> model) {
 
         for (OneOut one : model.data) {
-            System.out.println(one.login + "|" + one.fio + "|" + one.date + "|" + one.prog);
-            addLog(one.login + "|" + one.fio + "|" + one.date + "|" + one.prog);
+            if (one.date == null) {
+                addLog("Не задана дата входа в систему: " + one.login + " " + one.fileName);
+            } else {
 
+
+
+                System.out.println(one.login + "|" + one.fio + "|" + one.date + "|" + one.prog);
+                addLog(one.login + "|" + one.fio + "|" + one.date + "|" + one.prog);
+            }
         }
     }
 
@@ -27,7 +33,7 @@ public class SaveData implements Consumer<Model<OneOut>> {
 
     void addLog(String str) {
 
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(nameFileLog, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nameFileLog, true))) {
             writer.append(str + '\n');
         } catch (IOException ex) {
             throw new RuntimeException(ex);
