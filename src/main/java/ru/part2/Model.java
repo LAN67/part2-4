@@ -1,6 +1,8 @@
 package ru.part2;
 
 import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 class Model<T> {
     List<T> data = new ArrayList<>();

@@ -10,7 +10,8 @@ import java.util.function.Supplier;
 
 @Component
 public class ReadFiles implements Supplier<Model> {
-    String pathIn = "src\\main\\resources\\in";
+    private String pathIn = "src\\main\\resources\\in";
+    private Model<OneIn> model;
 
     @Override
     public Model<OneIn> get() {
@@ -18,9 +19,9 @@ public class ReadFiles implements Supplier<Model> {
 
         File[] files = file.listFiles();
         if (files != null) {
-            Model<OneIn> model = new Model<>();
+            model = new Model<>();
             for (File file1 : files) {
-                readFile(file1, model);
+                readFile(file1);
             }
             return model;
         } else {
@@ -28,7 +29,7 @@ public class ReadFiles implements Supplier<Model> {
         }
     }
 
-    void readFile(File file, Model<OneIn> model) {
+    void readFile(File file) {
         String str;
         String[] array;
         OneIn one;

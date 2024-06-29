@@ -2,6 +2,7 @@ package ru.part2;
 
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,7 +42,6 @@ public class Convert implements Function<Model<OneIn>, Model<OneOut>> {
     }
 
     private String normalName(String name) {
-
         return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
     }
 }
