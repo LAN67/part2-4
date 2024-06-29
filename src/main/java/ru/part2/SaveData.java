@@ -42,12 +42,12 @@ public class SaveData implements Consumer<Model<OneOut>> {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         try {
             connection = DriverManager.getConnection(connectString, USERNAME, PASSWORD);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         for (OneOut one : model.data) {
             if (one.date == null) {
@@ -74,12 +74,12 @@ public class SaveData implements Consumer<Model<OneOut>> {
                             if (rs.next()) {
                                 id = rs.getInt(1);
                             }
-                        } catch (SQLException throwables) {
-                            throwables.printStackTrace();
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
                         }
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
                 // logins
                 try {
@@ -90,7 +90,7 @@ public class SaveData implements Consumer<Model<OneOut>> {
                     preparedStatement.setString(3, one.prog);
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         }
