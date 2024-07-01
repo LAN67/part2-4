@@ -9,6 +9,7 @@ import java.util.Date;
 public class LogHandler<T> implements InvocationHandler {
     private T currentObject;
     //@Autowired
+    //private Log log;
     private Log log = new Log();
 
     public LogHandler(T currentObject) {
