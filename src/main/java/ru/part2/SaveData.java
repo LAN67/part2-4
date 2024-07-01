@@ -1,10 +1,8 @@
 package ru.part2;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.function.Consumer;
@@ -13,9 +11,11 @@ import java.sql.*;
 @Component
 public class SaveData implements Consumer<Model<OneOut>> {
     private String nameFileLog = "src\\main\\resources\\log\\log_file.txt";
-    private String connectString = "jdbc:postgresql://192.168.1.121:5432/innotech";
+    private String connectString = "jdbc:postgresql://10.0.0.12:5432/innotech";
     private String USERNAME = "postgres";
     private String PASSWORD = "password";
+    @Autowired
+    Log log;
 
     private static Connection connection;
 
@@ -39,6 +39,7 @@ public class SaveData implements Consumer<Model<OneOut>> {
         PreparedStatement preparedStatement;
         ResultSet rs;
 
+        log.setNameFileLog(nameFileLog);
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
@@ -51,7 +52,7 @@ public class SaveData implements Consumer<Model<OneOut>> {
         }
         for (OneOut one : model.data) {
             if (one.date == null) {
-                addLog("Не задана дата входа в систему: " + one.login + " файл: " + one.fileName);
+                log.accept("Не задана дата входа в систему: " + one.login + " файл: " + one.fileName);
             } else {
                 id = -1;
                 try {
@@ -110,14 +111,5 @@ public class SaveData implements Consumer<Model<OneOut>> {
 
     public void setPASSWORD(String PASSWORD) {
         this.PASSWORD = PASSWORD;
-    }
-
-    void addLog(String str) {
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nameFileLog, true))) {
-            writer.append(str + '\n');
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
     }
 }

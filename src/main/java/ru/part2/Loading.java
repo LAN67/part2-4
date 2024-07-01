@@ -17,6 +17,7 @@ public class Loading {
     Consumer<Model> saveData;
 
     void loading() {
+        //saveData.accept(Utils.log(convert.apply(readFiles.get())));
         saveData.accept(convert.apply(readFiles.get()));
     }
 }

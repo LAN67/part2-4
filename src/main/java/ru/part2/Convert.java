@@ -11,6 +11,7 @@ import java.util.function.Function;
 @Component
 public class Convert implements Function<Model<OneIn>, Model<OneOut>> {
 
+    @LogTransformation("src\\main\\resources\\log\\log2_file.txt")
     @Override
     public Model<OneOut> apply(Model<OneIn> model) {
         Model<OneOut> modelOut = new Model<>();
