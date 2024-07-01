@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 @Component
 public class ReadFiles implements Supplier<Model> {
-    private String pathIn = "src\\main\\resources\\in";
+    private String pathIn;
     private Model<OneIn> model;
 
     @Override

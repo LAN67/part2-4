@@ -10,14 +10,20 @@ import java.util.function.Supplier;
 @Component
 public class Loading {
     @Autowired
-    Supplier<Model> readFiles;
+    ReadFiles readFiles;
     @Autowired
-    Function<Model, Model> convert;
+    Convert convert;
     @Autowired
-    Consumer<Model> saveData;
+    SaveData saveData;
 
     void loading() {
-        //saveData.accept(Utils.log(convert.apply(readFiles.get())));
-        saveData.accept(convert.apply(readFiles.get()));
+        readFiles.setPathIn("src\\main\\resources\\in");
+        saveData.setNameFileLog("src\\main\\resources\\log\\log_file.txt");
+        saveData.setConnectString("jdbc:postgresql://10.0.0.12:5432/innotech");
+        saveData.setUSERNAME("postgres");
+        saveData.setPASSWORD("password");
+
+        Function<Model<OneIn>, Model<OneOut>> conv = Utils.log(convert);
+        saveData.accept(conv.apply(readFiles.get()));
     }
 }

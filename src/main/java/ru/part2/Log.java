@@ -17,10 +17,12 @@ public class Log implements Consumer<String> {
 
     @Override
     public void accept(String str) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nameFileLog, true))) {
-            writer.append(str + '\n');
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+        if(!nameFileLog.isEmpty()) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(nameFileLog, true))) {
+                writer.append(str + '\n');
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 }
