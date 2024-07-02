@@ -14,10 +14,9 @@ public class SaveData implements Consumer<Model<OneOut>> {
     private String connectString;
     private String USERNAME;
     private String PASSWORD;
-    @Autowired
-    Log log;
+    private Log log = new Log();
 
-    private static Connection connection;
+    private Connection connection;
 
     /*
       create table users (
