@@ -3,7 +3,6 @@ package ru.part2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
-import org.opentest4j.MultipleFailuresError;
 
 import java.sql.*;
 import java.util.concurrent.atomic.AtomicInteger;
