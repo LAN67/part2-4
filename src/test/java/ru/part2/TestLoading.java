@@ -55,7 +55,7 @@ public class TestLoading {
         int countLogins2 = 0;
 
         readFiles.setPathIn("src\\main\\resources\\in");
-        saveData.setNameFileLog("src\\main\\resources\\log\\log_file.txt");
+        saveData.setNameFileLog("d:\\logs\\log_file.txt");
         saveData.setConnectString(connectString);
         saveData.setUSERNAME(USERNAME);
         saveData.setPASSWORD(PASSWORD);

@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>ru.part2-1</groupId>
+  <groupId>ru.part2-4</groupId>
   <artifactId>part2-4</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>Archetype - part2-4</name>
@@ -11,14 +11,21 @@
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <spring.version>6.1.4</spring.version>
   </properties>
 
   <dependencies>
     <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
     <dependency>
       <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+    <dependency>
+      <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>5.3.27</version>
+      <version>${spring.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.annotation</groupId>
@@ -38,5 +45,21 @@
     </dependency>
 
   </dependencies>
-
+  <build>
+    <finalName>part2-4</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>ru.part2.Main</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
