@@ -21,6 +21,7 @@ public class Loading {
 
     void loading() {
         readFiles.setPathIn("src\\main\\resources\\in");
+        convert.setNameFileLog("d:\\logs\\log_file.txt");
         saveData.setNameFileLog("d:\\logs\\log_file.txt");
         saveData.setConnectString("jdbc:postgresql://10.0.0.10:5432/innotech");
         saveData.setUSERNAME("postgres");

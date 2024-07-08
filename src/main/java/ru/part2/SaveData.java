@@ -13,9 +13,9 @@ public class SaveData implements Consumer<Model> {
     private String connectString;
     private String USERNAME;
     private String PASSWORD;
-    private Log log = new Log();
 
     private Connection connection;
+    Log log = new Log();
 
     /*
       create table users (
@@ -49,9 +49,7 @@ public class SaveData implements Consumer<Model> {
             throw new RuntimeException(e);
         }
         for (OneLine one : model.data) {
-            if (one.outDate == null) {
-                log.accept("Не задана дата входа в систему: " + one.inLogin + " файл: " + one.fileName);
-            } else {
+            if (one.outDate != null) {
                 id = -1;
                 try {
                     // users

@@ -9,11 +9,14 @@ import java.util.function.Function;
 
 @Component
 public class Convert implements Function<Model, Model> {
+    private String nameFileLog;
+    Log log = new Log();
 
     @LogTransformation("d:\\logs\\log2_file.txt")
     @Override
     public Model apply(Model model) {
         DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+        log.setNameFileLog(nameFileLog);
 
         for (OneLine one : model.data) {
             one.outLogin = one.inLogin;
@@ -26,6 +29,7 @@ public class Convert implements Function<Model, Model> {
                 }
             }else{
                 one.outDate = null;
+                log.accept("Не задана дата входа в систему: " + one.inLogin + " файл: " + one.fileName);
             }
         }
         return model;
@@ -33,5 +37,9 @@ public class Convert implements Function<Model, Model> {
 
     private String normalName(String name) {
         return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+    }
+
+    public void setNameFileLog(String nameFileLog) {
+        this.nameFileLog = nameFileLog;
     }
 }
