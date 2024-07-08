@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
 import java.sql.*;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestLoading {
@@ -31,12 +32,40 @@ public class TestLoading {
         AtomicInteger count = new AtomicInteger();
 
         readFiles.setPathIn("src\\main\\resources\\in");
+        convert.setNameFileLog("d:\\logs\\log_file.txt");
         model = convert.apply(readFiles.get());
 
         count.set(0);
         model.data.forEach(x -> count.getAndIncrement());
 
         Assertions.assertEquals(7, count.get());
+    }
+
+    @Test
+    public void TestConvertProg() {
+        Model model;
+        ReadFiles readFiles = new ReadFiles();
+        Convert convert = new Convert();
+        ConvertProg convertProg = new ConvertProg();
+        AtomicInteger count = new AtomicInteger();
+
+        readFiles.setPathIn("src\\main\\resources\\in");
+        convert.setNameFileLog("d:\\logs\\log_file.txt");
+        model = convert.apply(readFiles.get());
+        model = convertProg.apply(model);
+
+        count.set(0);
+        model.data.forEach(x -> count.getAndIncrement());
+
+        Assertions.assertEquals(7, count.get());
+
+        for (OneLine one : model.data) {
+            if (Objects.equals(one.inProg, "web") || Objects.equals(one.inProg, "mobile")) {
+                Assertions.assertEquals(one.inProg, one.outProg);
+            }else{
+                Assertions.assertEquals("other:" + one.inProg, one.outProg);
+            }
+        }
     }
 
     @Test
@@ -55,6 +84,7 @@ public class TestLoading {
         int countLogins2 = 0;
 
         readFiles.setPathIn("src\\main\\resources\\in");
+        convert.setNameFileLog("d:\\logs\\log_file.txt");
         saveData.setNameFileLog("d:\\logs\\log_file.txt");
         saveData.setConnectString(connectString);
         saveData.setUSERNAME(USERNAME);
