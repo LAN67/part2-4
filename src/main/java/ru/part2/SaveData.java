@@ -1,6 +1,5 @@
 package ru.part2;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.DriverManager;
@@ -9,7 +8,7 @@ import java.util.function.Consumer;
 import java.sql.*;
 
 @Component
-public class SaveData implements Consumer<Model<OneOut>> {
+public class SaveData implements Consumer<Model> {
     private String nameFileLog;
     private String connectString;
     private String USERNAME;
@@ -32,7 +31,7 @@ public class SaveData implements Consumer<Model<OneOut>> {
       );
      */
     @Override
-    public void accept(Model<OneOut> model) {
+    public void accept(Model model) {
         String sql;
         int id;
         PreparedStatement preparedStatement;
@@ -49,16 +48,16 @@ public class SaveData implements Consumer<Model<OneOut>> {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        for (OneOut one : model.data) {
-            if (one.date == null) {
-                log.accept("Не задана дата входа в систему: " + one.login + " файл: " + one.fileName);
+        for (OneLine one : model.data) {
+            if (one.outDate == null) {
+                log.accept("Не задана дата входа в систему: " + one.inLogin + " файл: " + one.fileName);
             } else {
                 id = -1;
                 try {
                     // users
                     sql = "SELECT id FROM users WHERE username=?";
                     preparedStatement = connection.prepareStatement(sql);
-                    preparedStatement.setString(1, one.login);
+                    preparedStatement.setString(1, one.outLogin);
                     ResultSet resultSet = preparedStatement.executeQuery();
                     if (resultSet.next()) {
                         id = resultSet.getInt("id");
@@ -67,8 +66,8 @@ public class SaveData implements Consumer<Model<OneOut>> {
                         try {
                             sql = "insert into users (username, fio) values(?,?) RETURNING id";
                             preparedStatement = connection.prepareStatement(sql);
-                            preparedStatement.setString(1, one.login);
-                            preparedStatement.setString(2, one.fio);
+                            preparedStatement.setString(1, one.outLogin);
+                            preparedStatement.setString(2, one.outFIO);
                             preparedStatement.execute();
                             rs = preparedStatement.getResultSet();
                             if (rs.next()) {
@@ -85,9 +84,9 @@ public class SaveData implements Consumer<Model<OneOut>> {
                 try {
                     sql = "insert into logins (access_date, user_id, application) values(?,?,?)";
                     preparedStatement = connection.prepareStatement(sql);
-                    preparedStatement.setDate(1, new java.sql.Date(one.date.getTime()));
+                    preparedStatement.setDate(1, new java.sql.Date(one.outDate.getTime()));
                     preparedStatement.setInt(2, id);
-                    preparedStatement.setString(3, one.prog);
+                    preparedStatement.setString(3, one.outProg);
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
                     throw new RuntimeException(e);

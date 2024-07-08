@@ -11,37 +11,37 @@ public class TestLoading {
 
     @Test
     public void TestReadFiles() {
-        Model<OneIn> modelIn;
+        Model model;
         ReadFiles readFiles = new ReadFiles();
         AtomicInteger count = new AtomicInteger();
 
         readFiles.setPathIn("src\\main\\resources\\in");
-        modelIn = readFiles.get();
+        model = readFiles.get();
         count.set(0);
-        modelIn.data.forEach(x -> count.getAndIncrement());
+        model.data.forEach(x -> count.getAndIncrement());
 
         Assertions.assertEquals(7, count.get());
     }
 
     @Test
     public void TestConvert() {
-        Model<OneOut> modelOut;
+        Model model;
         ReadFiles readFiles = new ReadFiles();
         Convert convert = new Convert();
         AtomicInteger count = new AtomicInteger();
 
         readFiles.setPathIn("src\\main\\resources\\in");
-        modelOut = convert.apply(readFiles.get());
+        model = convert.apply(readFiles.get());
 
         count.set(0);
-        modelOut.data.forEach(x -> count.getAndIncrement());
+        model.data.forEach(x -> count.getAndIncrement());
 
         Assertions.assertEquals(7, count.get());
     }
 
     @Test
     public void TestSaveData() {
-        String connectString = "jdbc:postgresql://10.0.0.12:5432/innotech";
+        String connectString = "jdbc:postgresql://10.0.0.10:5432/innotech";
         String USERNAME = "postgres";
         String PASSWORD = "password";
         ReadFiles readFiles = new ReadFiles();

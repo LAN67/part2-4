@@ -2,44 +2,33 @@ package ru.part2;
 
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.function.Function;
 
 @Component
-public class Convert implements Function<Model<OneIn>, Model<OneOut>> {
+public class Convert implements Function<Model, Model> {
 
     @LogTransformation("d:\\logs\\log2_file.txt")
     @Override
-    public Model<OneOut> apply(Model<OneIn> model) {
-        Model<OneOut> modelOut = new Model<>();
-        OneOut oneOut;
+    public Model apply(Model model) {
         DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 
-        for (OneIn oneIn : model.data) {
-            oneOut = new OneOut();
-            oneOut.login = oneIn.login;
-            oneOut.fio = normalName(oneIn.f) + " " + normalName(oneIn.i) + " " + normalName(oneIn.o);
-            if (!oneIn.date.isEmpty()) {
+        for (OneLine one : model.data) {
+            one.outLogin = one.inLogin;
+            one.outFIO = normalName(one.inF) + " " + normalName(one.inI) + " " + normalName(one.inO);
+            if (!one.inDate.isEmpty()) {
                 try {
-                    oneOut.date = df.parse(oneIn.date);
+                    one.outDate = df.parse(one.inDate);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
             }else{
-                oneOut.date = null;
+                one.outDate = null;
             }
-            if (oneIn.prog.equals("web") || oneIn.prog.equals("mobile")) {
-                oneOut.prog = oneIn.prog;
-            } else {
-                oneOut.prog = "other:" + oneIn.prog;
-            }
-            oneOut.fileName = oneIn.fileName;
-            modelOut.data.add(oneOut);
         }
-        return modelOut;
+        return model;
     }
 
     private String normalName(String name) {

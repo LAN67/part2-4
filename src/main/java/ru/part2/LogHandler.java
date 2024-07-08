@@ -23,9 +23,12 @@ public class LogHandler<T> implements InvocationHandler {
             log.setNameFileLog(currentMethod.getAnnotation(LogTransformation.class).value());
             log.accept(new Date().toString());
             log.accept(currentObject.getClass().toString());
-            log.accept(((Model<OneIn>)args[0]).toString());
-            Model<OneOut> modelOut;
+            log.accept(currentMethod.toString());
+            log.accept("до");
+            log.accept(((Model)args[0]).toString());
+            Model modelOut;
             modelOut = (Model)method.invoke(currentObject, args);
+            log.accept("после");
             log.accept(modelOut.toString());
             return modelOut;
         } else {
