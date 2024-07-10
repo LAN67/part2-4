@@ -14,7 +14,6 @@ public class Loading {
     ReadFiles readFiles;
     @Autowired
     SaveData saveData;
-    @Autowired
     Model model;
 
     @Autowired
