@@ -3,21 +3,24 @@ package ru.part2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 
 import java.sql.*;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@PropertySource("classpath:application.properties")
 public class TestLoading {
 
     @Test
     public void TestReadFiles() {
         Model model;
-        ReadFiles readFiles = new ReadFiles();
         AtomicInteger count = new AtomicInteger();
 
-        readFiles.setPathIn("src\\main\\resources\\in");
-        model = readFiles.get();
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("ru.part2");
+        model = context.getBean("readFiles", ReadFiles.class).get();
         count.set(0);
         model.data.forEach(x -> count.getAndIncrement());
 
@@ -27,13 +30,11 @@ public class TestLoading {
     @Test
     public void TestConvert() {
         Model model;
-        ReadFiles readFiles = new ReadFiles();
-        Convert convert = new Convert();
         AtomicInteger count = new AtomicInteger();
 
-        readFiles.setPathIn("src\\main\\resources\\in");
-        convert.setNameFileLog("d:\\logs\\log_file.txt");
-        model = convert.apply(readFiles.get());
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("ru.part2");
+        model = context.getBean("readFiles", ReadFiles.class).get();
+        model = context.getBean("convert", Convert.class).apply(model);
 
         count.set(0);
         model.data.forEach(x -> count.getAndIncrement());
@@ -44,15 +45,12 @@ public class TestLoading {
     @Test
     public void TestConvertProg() {
         Model model;
-        ReadFiles readFiles = new ReadFiles();
-        Convert convert = new Convert();
-        ConvertProg convertProg = new ConvertProg();
         AtomicInteger count = new AtomicInteger();
 
-        readFiles.setPathIn("src\\main\\resources\\in");
-        convert.setNameFileLog("d:\\logs\\log_file.txt");
-        model = convert.apply(readFiles.get());
-        model = convertProg.apply(model);
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("ru.part2");
+        model = context.getBean("readFiles", ReadFiles.class).get();
+        model = context.getBean("convert", Convert.class).apply(model);
+        model = context.getBean("convertProg", ConvertProg.class).apply(model);
 
         count.set(0);
         model.data.forEach(x -> count.getAndIncrement());
@@ -69,26 +67,18 @@ public class TestLoading {
     }
 
     @Test
-    public void TestSaveData() {
-        String connectString = "jdbc:postgresql://10.0.0.10:5432/innotech";
-        String USERNAME = "postgres";
-        String PASSWORD = "password";
-        ReadFiles readFiles = new ReadFiles();
-        Convert convert = new Convert();
-        SaveData saveData = new SaveData();
+    void TestSaveDate() {
+        Model model;
         Connection connection;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         int countLogins = 0;
         int countUsers2 = 0;
         int countLogins2 = 0;
+        Environment environment;
 
-        readFiles.setPathIn("src\\main\\resources\\in");
-        convert.setNameFileLog("d:\\logs\\log_file.txt");
-        saveData.setNameFileLog("d:\\logs\\log_file.txt");
-        saveData.setConnectString(connectString);
-        saveData.setUSERNAME(USERNAME);
-        saveData.setPASSWORD(PASSWORD);
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("ru.part2");
+        environment = context.getEnvironment();
 
         try {
             Class.forName("org.postgresql.Driver");
@@ -97,7 +87,10 @@ public class TestLoading {
 
         }
         try {
-            connection = DriverManager.getConnection(connectString, USERNAME, PASSWORD);
+            connection = DriverManager.getConnection(
+                    Objects.requireNonNull(environment.getProperty("connectString")),
+                    environment.getProperty("userName2"),
+                    environment.getProperty("userPassword2"));
         } catch (SQLException e) {
             throw new AssertionFailedError();
         }
@@ -111,7 +104,10 @@ public class TestLoading {
             throw new AssertionFailedError();
         }
 
-        saveData.accept(convert.apply(readFiles.get()));
+        model = context.getBean("readFiles", ReadFiles.class).get();
+        model = context.getBean("convert", Convert.class).apply(model);
+        model = context.getBean("convertProg", ConvertProg.class).apply(model);
+        context.getBean("saveData", SaveData.class).accept(model);
 
         try {
             preparedStatement = connection.prepareStatement("SELECT count(*) count FROM users");

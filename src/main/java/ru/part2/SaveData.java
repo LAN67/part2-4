@@ -1,21 +1,24 @@
 package ru.part2;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.sql.*;
 
 @Component
+@PropertySource("classpath:application.properties")
 public class SaveData implements Consumer<Model> {
-    private String nameFileLog;
-    private String connectString;
-    private String USERNAME;
-    private String PASSWORD;
 
     private Connection connection;
     Log log = new Log();
+    @Autowired
+    Environment environment;
 
     /*
       create table users (
@@ -37,14 +40,17 @@ public class SaveData implements Consumer<Model> {
         PreparedStatement preparedStatement;
         ResultSet rs;
 
-        log.setNameFileLog(nameFileLog);
+        log.setNameFileLog(environment.getProperty("logFileName"));
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
         try {
-            connection = DriverManager.getConnection(connectString, USERNAME, PASSWORD);
+            connection = DriverManager.getConnection(
+                    Objects.requireNonNull(environment.getProperty("connectString")),
+                    environment.getProperty("userName2"),
+                    environment.getProperty("userPassword2"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -91,21 +97,5 @@ public class SaveData implements Consumer<Model> {
                 }
             }
         }
-    }
-
-    public void setNameFileLog(String nameFileLog) {
-        this.nameFileLog = nameFileLog;
-    }
-
-    public void setConnectString(String connectString) {
-        this.connectString = connectString;
-    }
-
-    public void setUSERNAME(String USERNAME) {
-        this.USERNAME = USERNAME;
-    }
-
-    public void setPASSWORD(String PASSWORD) {
-        this.PASSWORD = PASSWORD;
     }
 }

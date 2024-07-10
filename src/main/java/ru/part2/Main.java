@@ -7,8 +7,7 @@ public class Main {
 
         System.out.println("start");
         new AnnotationConfigApplicationContext("ru.part2")
-                .getBean("loading", Loading.class)
-                .loading();
+                .getBean("loading", Loading.class).loading();
         System.out.println("end");
     }
 }

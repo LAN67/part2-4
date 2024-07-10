@@ -17,7 +17,7 @@ public class Log implements Consumer<String> {
 
     @Override
     public void accept(String str) {
-        if(!nameFileLog.isEmpty()) {
+        if(nameFileLog!=null) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(nameFileLog, true))) {
                 writer.append(str + '\n');
             } catch (IOException ex) {
